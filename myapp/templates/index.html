@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style>
+body {
+  font-family: Arial;
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+div.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+<body>
+
+{% if msg %}
+<p style="color: rebeccapurple;">{{msg}}</p>
+{% endif %}
+<div class="container">
+  <form action="{% url 'index' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="stuid" id="stuid" />
+    <label for="fname">Name</label>
+    {{form.name}}
+
+    <label for="lname">Email</label>
+    {{form.email}}
+
+    <label for="lname">Phone</label>
+    {{form.phone}}
+   
+    <label for="lname">Password</label>
+    {{form.password}}
+    
+  
+    <input type="submit" class="btn btn-add" id="btn" value="ADD">
+  </form>
+</div>
+<br>
+<br>
+
+<table id="table">
+  <tr>
+    <th>id</th>
+    <th>NAME</th>
+    <th>EMAIL</th>
+    <th>PHONE</th>
+    <th>Edit</th>
+  </tr> 
+  {% for one in uid%}
+  <tr>
+    <td>{{one.id}}</td>
+    <td>{{one.name}}</td>
+    <td>{{one.email}}</td>
+    <td>{{one.phone}}</td>
+    <td>
+      <input type="button" value="Edit" class="btn-edit" data-sid="{{one.id}}">
+      <input type="button" value="Delete" class="btn-delete" data-sid="{{one.id}}">
+
+  </td>
+
+  </tr>
+  {% endfor%}
+</table>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+{% include 'ajax.html' %}
+</body>
+</html>

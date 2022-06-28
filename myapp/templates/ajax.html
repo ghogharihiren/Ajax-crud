@@ -1,0 +1,97 @@
+<script>
+    $("#btn").click(function(event){
+        event.preventDefault();
+        output="";
+        {% comment %} console.log('add'); {% endcomment %}
+        let sid = $('#stuid').val();
+        let name1=$("#nameid").val();
+        let email1=$("#emailid").val();
+        let phone1=$("#phoneid").val();
+        let password1=$("#passwordid").val();
+        let csr=$("input[name=csrfmiddlewaretoken]").val();
+        {% comment %} console.log(name); {% endcomment %}
+
+        mydata={stuid:sid,name:name1,email:email1,phone:phone1,password:password1,csrfmiddlewaretoken:csr};
+        $.ajax({
+            url:"{% url 'add' %}",
+            method:"POST",
+            data:mydata,
+            success:function(data){
+               {% comment %} console.log(data); {% endcomment %}
+               x=data.user;
+               if (data.status == 200){
+                console.log('your data save in database');
+                for(i=0; i<x.length; i++){
+                    output += "<tr><td>" + x[i].id +
+                    "</td><td>" + x[i].name +
+                    "</td><td>" + x[i].email +
+                    "</td><td>" + x[i].phone +
+                    "</td><td> <input type='button' class='btn-edit' value='Edit' data-sid="+x[i].id + "> <input type='button' class='btn-delete' value='Delete' data-sid="+ x[i].id + " />"
+                }
+                $('#table').html(output);
+                $("form")[0].reset();
+               }
+               if (data.status == 400){
+                console.log('please enter the valid data')
+               }
+               
+            },
+        });    
+    });
+   
+{% comment %} delete {% endcomment %}
+$('#table').on("click", ".btn-delete", function(event){
+    event.preventDefault();
+    {% comment %} console.log("Delete Button Cliked"); {% endcomment %}
+    let id = $(this).attr("data-sid");
+    console.log(id);
+    mydata={sid:id};
+    mythis = this;
+
+    $.ajax({
+        url:"{% url 'delete' %}",
+        method:"GET",
+        data:mydata,
+        success:function(data){
+            {% comment %} console.log(data); {% endcomment %}
+        if(data.status == 200){
+            {% comment %} console.log("Data Deleted"); {% endcomment %}
+            $(mythis).closest("tr").fadeOut();
+        }
+
+        if(data.status == 400){
+            {% comment %} console.log("Unable To Deleted Data"); {% endcomment %}
+            $(mythis).closest("tr").fadeOut();
+        }
+    }
+
+    });
+});
+
+{% comment %} edit-data {% endcomment %}
+$('#table').on("click", ".btn-edit", function(event){
+    event.preventDefault();
+    console.log("edit Button Cliked");
+    let id = $(this).attr("data-sid");
+    console.log(id);
+    let csr=$("input[name=csrfmiddlewaretoken]").val();
+    mydata={sid:id,csrfmiddlewaretoken:csr };
+
+    $.ajax({
+
+        url:"{% url 'edit' %}",
+        method:"POST",
+        data:mydata,
+        success:function(data){
+            $("#stuid").val(data.id);
+            $("#nameid").val(data.name);
+            $("#emailid").val(data.email);
+            $("#phoneid").val(data.phone);
+        },    
+    });
+
+
+
+});
+
+</script>
